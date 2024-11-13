@@ -1,0 +1,35 @@
+Policy saved to models/td3_policy_1000000.pth
+
+Starting evaluation...
+Episode 1: Reward = 28.53, Steps = 30
+Episode 2: Reward = 27.96, Steps = 30
+Episode 3: Reward = 27.86, Steps = 30
+Episode 4: Reward = 27.96, Steps = 30
+Episode 5: Reward = 27.55, Steps = 30
+Episode 6: Reward = 28.50, Steps = 30
+Episode 7: Reward = 27.52, Steps = 30
+Episode 8: Reward = 27.92, Steps = 30
+Episode 9: Reward = 28.38, Steps = 30
+Episode 10: Reward = 27.97, Steps = 30
+
+Evaluation over 10 episodes:
+Mean reward: 28.01 ± 0.34
+Min reward: 27.52
+Max reward: 28.53
+
+   Test Number    Reward    Duration (s)
+-------------  --------  --------------
+            1   28.3284              30
+            2   28.4862              30
+            3   28.0368              30
+            4   27.6726              30
+            5   27.6531              30
+            6   28.0367              30
+            7   28.5214              30
+            8   27.6328              30
+            9   27.9358              30
+           10   27.94                30
+
+Average Reward:  28.024371367692947 
+
+Success Rate:  100.0 %
