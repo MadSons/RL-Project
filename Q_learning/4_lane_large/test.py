@@ -19,6 +19,8 @@ import numpy as np
 from itertools import product
 from scipy.spatial import KDTree
 
+print("\nLoading data... (might take 50 to 60 seconds)")
+
 import pickle
 with open("state_policy.pkl", "rb") as f:
     state_policy = pickle.load(f)
@@ -67,7 +69,7 @@ states = [
     ])
     for t2, t5, t6, t7, t9, t10, t11 in combinations
 ]
-print(len(states))
+# print(len(states))
 flattened_states = [matrix.flatten() for matrix in states]
 kdtree = KDTree(flattened_states)
 
@@ -98,7 +100,7 @@ filtered_states = [states[i] for i in range(len(visited_time)) if visited_time[i
 filtered_policy = [state_policy[i] for i in range(len(visited_time)) if visited_time[i] >= 1]
 flattened_states1 = [matrix.flatten() for matrix in filtered_states]
 kdtree1 = KDTree(flattened_states1)
-print(len(filtered_states),len(filtered_policy))
+# print(len(filtered_states),len(filtered_policy))
 import gymnasium as gym
 import highway_env
 import numpy as np
@@ -131,7 +133,7 @@ import time
 testlength = []
 testreward = []
 percentage_30 = 0
-for q in range (5):
+for q in range (10):
     test_action_length = 0
     rewardtest = 0
     done = False
@@ -153,8 +155,4 @@ for q in range (5):
             done = True
     testlength.append(test_action_length)
     testreward.append(rewardtest)
-percentage_30 = sum(1 for length in testlength if length >= 30) / 100 * 100
-average_reward = sum(testreward) / 100
 
-print(f"Success Rate: {percentage_30}%")
-print(f"Average reward: {average_reward}")
