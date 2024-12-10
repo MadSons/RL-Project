@@ -3,3 +3,4 @@ matplotlib
 numpy
 gymnasium
 torch
+tensorflow
