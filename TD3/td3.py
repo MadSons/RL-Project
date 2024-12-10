@@ -11,15 +11,51 @@ import time
 import multiprocessing
 from stable_baselines3.common.evaluation import evaluate_policy
 
-
-# Set the multiprocessing start method to 'spawn'
-#multiprocessing.set_start_method("spawn", force=True)
-
 # Create directories
 log_dir = "logs"
 models_dir = "models"
 os.makedirs(log_dir, exist_ok=True)
 os.makedirs(models_dir, exist_ok=True)
+"""
+config_1
+lanes_count: 2
+vehicles_count: 50
+reward_speed_range: [20, 30]
+config_2
+4
+50
+[20, 30]
+config_3
+6
+50
+[20, 30]
+config_4
+2
+100
+[20, 30]
+config_5
+4
+100
+[20, 30]
+config_6
+6
+100
+[20, 30]
+config_7
+2
+25
+[40, 50]
+config_8
+4
+25
+[40, 50]
+config_9
+6
+25
+[40, 50]
+
+"""
+config_num=0
 
 def make_env():
     """Initialize and configure the environment"""
@@ -30,12 +66,9 @@ def make_env():
             "action": {
                 "type": "ContinuousAction"
             },
-            "observation": {
-                "type": "Kinematics",
-                "features": ["x", "y", "vx", "vy"],
-                "absolute": True,
-                "normalize": True
-            },
+            #"lanes_count": 3,
+            #"vehicles_count": 25,
+            #"reward_speed_range": [40, 50],
         }
     )
     return env
@@ -61,7 +94,7 @@ class CustomTD3:
             self.env,
             action_noise=self.action_noise,
             verbose=1,
-            buffer_size=1_000, # 100000, 500000, 1000000, 5000000, 10000000, 50000, 10000, 1000
+            buffer_size=100000, # 100000, 500000, 1000000, 5000000, 10000000, 50000, 10000, 1000
             learning_rate=3e-4,
             batch_size=256,
             gamma=0.99,
@@ -69,7 +102,7 @@ class CustomTD3:
             policy_delay=2,
             tensorboard_log=log_dir,
             device=self.device,
-            policy_kwargs=dict(net_arch=[512, 512, 256])  # Larger network
+            policy_kwargs=dict(net_arch=[256, 256, 128]) # smaller net
         )
     
     def train(self, total_timesteps):
@@ -78,7 +111,7 @@ class CustomTD3:
         try:
             self.model.learn(total_timesteps=total_timesteps, log_interval=1)
             self.save_policy()
-            self.model.save(f'TD3_model_{self.model.buffer_size}')
+            self.model.save(f'TD3_config_{config_num}_new')
         except Exception as e:
             print(f"Training error: {e}")
             self.save_policy()
@@ -86,7 +119,7 @@ class CustomTD3:
     def save_policy(self):
         """Save the policy network"""
         try:
-            policy_path = os.path.join(models_dir, f"td3_policy_{self.model.buffer_size}.pth")
+            policy_path = os.path.join(models_dir, f"td3_policy_config{config_num}_new.pth")
             torch.save(self.model.policy.state_dict(), policy_path)
             print(f"Policy saved to {policy_path}")
         except Exception as e:
@@ -151,7 +184,7 @@ def main():
         print("Action space:", agent.env.action_space)
         print("Number of actions:", agent.env.action_space.shape[-1])
         
-        agent.train(total_timesteps=250_000)
+        agent.train(total_timesteps=10_000)
         agent.evaluate(num_episodes=10)
 
         # Evaluate the model n number of times
@@ -180,6 +213,8 @@ def main():
         # Print success rate (duration agent lasted / max duration length)
         env_max_duration = 30 # highway-fast_v0 duration is set to 30s
         print("Success Rate: ", np.mean(duration)/env_max_duration*100,"% \n")
+
+        print(f'CONFIG {config_num}')
         
     except Exception as e:
         print(f"Main execution error: {e}")
