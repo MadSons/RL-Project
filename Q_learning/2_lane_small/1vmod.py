@@ -13,6 +13,8 @@ action_length = []
 states = []
 visited_time = []
 
+print("\nLoading data...")
+
 import pickle
 with open("state_policy.pkl", "rb") as f:
     state_policy = pickle.load(f)
@@ -98,7 +100,7 @@ for q in range (10):
         print(action, reward, c2)
         a = n_state
         reward1 += reward
-        time.sleep(0.1)
+        time.sleep(0.2)
         state = n_state
         if additional_info:
             done = True
